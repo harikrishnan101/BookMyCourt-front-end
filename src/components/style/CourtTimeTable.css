@@ -1,0 +1,21 @@
+.cus-dropdown{
+    position: relative;
+    padding: 5px;
+    border: 1px solid black;
+    width: 200px;
+
+}
+.cus-options{
+    position: absolute;
+    background-color: gray;
+width:100% ;
+top: 35px;
+left: 0px;
+min-height: 100px;
+z-index: 4;
+}
+
+.add-court-timing-modal{
+width: 500px;
+min-height: 400px;
+}

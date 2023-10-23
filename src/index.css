@@ -1,0 +1,21 @@
+.background-radial-gradient {
+  background-color: hsl(8, 63%, 50%);
+  background-image: radial-gradient(650px circle at 0% 0%,
+      hsl(311, 59%, 52%) 15%,
+      
+
+      
+      
+      transparent 100%),
+    radial-gradient(1250px circle at 100% 100%,
+    hsl(311, 59%, 52%) 15%,
+    hsl(311, 59%, 52%) 15%,
+
+    hsl(311, 59%, 52%) 15%,
+    hsl(311, 59%, 52%) 15%,
+    
+      hsl(354, 72%, 46%) 15%,
+     
+      hsl(311, 59%, 52%) 15%,
+      transparent 100%);
+}
