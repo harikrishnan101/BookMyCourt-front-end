@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbarmain from '../components/Navbar'
 import Cards from '../components/Cards'
 import {
@@ -8,9 +8,23 @@ import {
 }
   from 'mdb-react-ui-kit';
 import Footer from './Footer';
+import AxiosInstance from '../config/axiosinstance';
 
 
 function Home() {
+const[courtData,setcourtData]=useState([])
+
+  useEffect(()=>{
+getAllCourtData()
+  },[])
+
+  const getAllCourtData=()=>{
+    AxiosInstance.get('users/getAllCourtData').then((res)=>{
+setcourtData(res?.data?.court)
+    })
+  }
+
+
   return (
     // Navbar
     <><div>
@@ -20,17 +34,12 @@ function Home() {
       {/* body */}
       <div className='container mt-4 '>
         <div className='row d-flex justify-content-center  gap-4'>
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
-          <Cards />
+
+          {
+            courtData?.map((element)=>  <Cards data={element} />)
+          }
+        
+          
          
         </div >
         <Footer/>

@@ -19,7 +19,7 @@ function CourtRegistrationForm() {
   const [formErrors, setFormErrors] = useState({});
 
   const handleFileChange = (e) => {
-    console.log(e.target.files[0]);
+    
     setCourtpic({ file: e.target.files[0] });
   };
 

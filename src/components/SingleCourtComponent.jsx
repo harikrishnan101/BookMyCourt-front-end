@@ -18,7 +18,7 @@ function SingleCourtComponent({ setcourtData }) {
       setcourtData(res.data.data)
     })
       .catch((err) => {
-        console.log(err);
+        
       });
   }, []);
 

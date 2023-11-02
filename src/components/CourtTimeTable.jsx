@@ -1,65 +1,103 @@
 import Table from 'react-bootstrap/Table';
 import Courtmodal from "../components/common/Modal";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './style/CourtTimeTable.css';
 import { TIMINGS } from '../constants/baseUrl';
 import AxiosInstance from '../config/axiosinstance';
+import { MDBInput } from 'mdb-react-ui-kit';
+import { useParams } from 'react-router-dom';
 
 function CourtTimeTable({ data }) {
   const [openModal, setOpenModal] = useState();
 
-  const[filterTimings,setfilterTimings]=useState(TIMINGS)
+  const { id } = useParams()
+
+  const [filterTimings, setfilterTimings] = useState(TIMINGS)
 
   const [showDropDown, setshowDropDown] = useState(false);
-  // const [minData,setminData]=useState(new Date())
+  const [minDate,setminDate]=useState(new Date())
 
-  const[selectedTimings,setselectedTimings]=useState([])
+const [minEndDate,setminEndDate]=useState()
 
-  const [courtTiming,setcourtTiming]=useState({
-    startDate:'',
-    endDate:'',
-    cost:''
+
+  const [selectedTimings, setselectedTimings] = useState([])
+
+  const [courtTiming, setcourtTiming] = useState({
+    startDate: null,
+    endDate: "",
+    cost: ""
   })
 
-  const addNewTime=(element,index)=>{
+  useEffect(() => {
+    AxiosInstance.get('/users/getLatestUpdateDate', {params:{courtId:id}}).then((res) => {
+      
+      let latestDate=new Date(res.data.minDate)
+      latestDate.setDate(latestDate.getDate()+1)
+      console.log(latestDate.toISOString().split('T')[0],"*************");
+      setminDate(latestDate.toISOString().split('T')[0])
+ 
 
-  const check =  selectedTimings.filter((timeObj)=> 
-      timeObj.id===element.id
-    ) 
+    })
+  },[])
 
 
-if(check.length > 0){
-  return
-}else{
-  setselectedTimings([...selectedTimings,element])
-}
+  useEffect(() => {
+    if (courtTiming.startDate) {
+      
+      let newMin = new Date(courtTiming.startDate).toISOString().split('T')[0];
+      setminDate(newMin);
+    } else {
+      setminEndDate(minDate);
+    }
+  }, [courtTiming.startDate, minDate]);
+  
 
-const filteredData =filterTimings.filter((timeObj)=>timeObj.id!==element.id)
-setfilterTimings(filteredData)
+  const addNewTime = (element, index) => {
+
+    const check = selectedTimings.filter((timeObj) =>
+      timeObj.id === element.id
+    )
+
+
+    if (check.length > 0) {
+      return
+    } else {
+      setselectedTimings([...selectedTimings, element])
+    }
+
+    const filteredData = filterTimings.filter((timeObj) => timeObj.id !== element.id)
+    setfilterTimings(filteredData)
 
   }
-  // const setStartingDate=(e)=>{
 
-  // }
 
   const addCourtTiming = () => {
-    AxiosInstance({
-      method: 'post',
-      url: '/users/addCourtTimings',
-      data: {
-        date: courtTiming,
-        schedules: selectedTimings,
-      }
-    }).then((res) => {
-      // debugger;
-      // Handle the response here
-    });
-    
-    console.log(courtTiming, selectedTimings);
+    setOpenModal(false)
+    try {
+      AxiosInstance({
+        method: 'post',
+        url: '/vendor/addCourtTimings',
+        data: {
+          date: courtTiming,
+          schedules: selectedTimings,
+          cost: courtTiming.cost,
+          courtId: id
+        }
+      }).then((res) => {
+        alert("slots add successfully")
+        setOpenModal(false)
+      })
+    } catch (error) {
+      setOpenModal(false)
+      alert("slots add failed")
+
+    }
+
+    console.log(courtTiming,selectedTimings);
+
   };
-  
-  
+
 
   return (
     <div>
@@ -116,24 +154,24 @@ setfilterTimings(filteredData)
         </tbody>
       </Table>
       <Courtmodal openModal={openModal} setOpenModal={setOpenModal}>
-        <div className='d-flex flex-column add-court-timing-modal'>
-          <div >{data?.name} </div>
-          <div>{data?.location} </div>
-          <div className='mt-4'>
-            <label htmlFor=''>Starting date</label>
-            <input className='' type='date' onChange={(e)=>setcourtTiming({...courtTiming,startDate:new Date(e.target.value)})} />
-            <label htmlFor=''>ending date</label>
-            <input className='' type='date' onChange={(e)=>setcourtTiming({...courtTiming,endDate:new Date(e.target.value)})} />
-            <label htmlFor=''> cost</label>
-            <input className='' type='number' onChange={(e)=>setcourtTiming({...courtTiming,cost:parseInt(e.target.value)})} />
+        <div className='d-flex flex-column add-court-timing-modal mt-5   text-center'>
+          <h4><div >{data?.name} </div>
+            <div>{data?.location} </div></h4>
+          <div className='mt-4 '>
+            <label htmlFor='' className=' me-5' >Starting Date</label>
+            <MDBInput wrapperClass='mb-1' type='date' min={minDate} onChange={(e) => setcourtTiming({ ...courtTiming, startDate: new Date(e.target.value) })} />
+            <label htmlFor='' className=' me-5'>Ending Date</label>
+            <MDBInput wrapperClass='mb-4 ' type='date' size='' min={minEndDate} onChange={(e) => setcourtTiming({ ...courtTiming, endDate: new Date(e.target.value) })} />
+            <label htmlFor='' className='me-5'> Cost</label>
+            <MDBInput wrapperClass='mb-4' type='number' onChange={(e) => setcourtTiming({ ...courtTiming, cost: parseInt(e.target.value) })} />
           </div>
-          <div className='cus-dropdown mt-4' onClick={() => setshowDropDown(true)}>
-            Select Timing
+          <div className=' mt-5 ' onClick={() => setshowDropDown(true)}>
+            <label htmlFor='' className='me-5'>  Select Timing </label>
             {showDropDown && (
               <div className='cus-options' onMouseLeave={() => setshowDropDown(false)}>
                 <ul>
-                  {(filterTimings).map((element,index) => 
-                    <li onClick={()=>addNewTime(element,index)} key={element.id}>{element.name}</li>
+                  {(filterTimings).map((element, index) =>
+                    <li onClick={() => addNewTime(element, index)} key={element.id}>{element.name}</li>
                   )}
                 </ul>
               </div>
@@ -141,15 +179,18 @@ setfilterTimings(filteredData)
           </div>
         </div>
         {
-          selectedTimings.map((element)=>  
-          
-          <span className='border border-1 mx-2' key={element.id}>{element.name} </span>
+          selectedTimings.map((element) =>
+
+            <span className='border border-1 mx-2' key={element.id}>{element.name} </span>
           )
         }
 
-        <div>
-        <button type="button" class="btn btn-primary" onClick={addCourtTiming()}>Primary</button>
+        <div className="text-center">
+          <button type="button" className="btn btn-primary mt-2" onClick={addCourtTiming}>
+            Primary
+          </button>
         </div>
+
       </Courtmodal>
     </div>
   );
