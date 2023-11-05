@@ -6,12 +6,12 @@ export default function Footer() {
     <MDBFooter className='bg-dark text-center text-white ' >
       
 
-      <div className='text-center p-3' style={{ backgroundColor: "red" }}>
+      {/* <div className='text-center p-3' style={{ backgroundColor: "red" }}>
         © 2020 Copyright:
         <a className='text-white' href='https://mdbootstrap.com/'>
           MDBootstrap.com
         </a>
-      </div>
+      </div> */}
     </MDBFooter>
   );
 }

@@ -68,7 +68,7 @@ function CourtData({data}) {
         {data?.location}
         
         </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
+        <Button variant="primary">Go </Button>
       </Card.Body>
     </Card>
   );
