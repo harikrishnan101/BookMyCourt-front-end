@@ -1,0 +1,24 @@
+/* Style the footer to cover the full screen height */
+.footer {
+    background-color: #333; /* Background color for the footer */
+    color: #fff; /* Text color for the footer */
+    padding: 20px 0; /* Adjust padding as needed */
+  
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  /* Style the container inside the footer */
+  .container {
+    text-align: center;
+  }
+  
+  /* Customize the text style */
+  .container p {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  /* Add additional styles to your footer as needed */
+  

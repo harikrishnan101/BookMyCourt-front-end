@@ -6,12 +6,18 @@ import CourtRegistration from './pages/CourtRegistrations'
 import MyCourts from './pages/MyCourts'
 import SingleCourtPage from './pages/SingleCourtPage'
 import UserCourtPage from './pages/UserCourtPage'
+import { Authorization, LoginpageAuth } from './Authorization/Authorization'
+
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route element={<LoginpageAuth/>}>
         <Route path="/" element={<Login />} />
+        </Route>
+        <Route element={<Authorization/>}>
         <Route path="/home" element={<Home />} />
         <Route path="/CourtRegistration" element={<CourtRegistration/>} />
         <Route path="/MyCourts" element={<MyCourts/>} />
@@ -20,7 +26,7 @@ function App() {
 
 
         
-
+        </Route>
         
       </Routes>
     </BrowserRouter>
